@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: gamemesh-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: gamemesh
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - gamemesh_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d gamemesh"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gamemesh-net
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: gamemesh-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"    # AMQP protocol
+      - "15672:15672"  # Management Web UI
+    volumes:
+      - gamemesh_rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gamemesh-net
+
+volumes:
+  gamemesh_pgdata:
+    driver: local
+  gamemesh_rabbitmq_data:
+    driver: local
+
+networks:
+  gamemesh-net:
+    driver: bridge
+

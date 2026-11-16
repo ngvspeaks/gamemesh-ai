@@ -1,0 +1,104 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  application:
+    name: gamemesh-ai
+
+  # -------------------------------------------------------------
+  # PostgreSQL Database Configuration
+  # -------------------------------------------------------------
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:gamemesh}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+      pool-name: GameMeshHikariCP
+
+  # -------------------------------------------------------------
+  # Spring Data JPA / Hibernate Configuration
+  # -------------------------------------------------------------
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  # -------------------------------------------------------------
+  # RabbitMQ Broker Configuration
+  # -------------------------------------------------------------
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: /
+    connection-timeout: 10000ms
+    template:
+      retry:
+        enabled: true
+        initial-interval: 1000ms
+        max-attempts: 3
+        multiplier: 2.0
+    listener:
+      simple:
+        acknowledge-mode: auto
+        concurrency: 2
+        max-concurrency: 5
+        prefetch: 10
+        default-requeue-rejected: false
+
+  # -------------------------------------------------------------
+  # Spring AI Configuration (Local Ollama & OpenAI Support)
+  # -------------------------------------------------------------
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:demo-key}
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-4o-mini}
+          temperature: 0.2
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        options:
+          model: ${OLLAMA_MODEL:llama3.2}
+          temperature: 0.2
+
+# -------------------------------------------------------------
+# GameMesh AI Custom Application Configuration
+# -------------------------------------------------------------
+gamemesh:
+  ai:
+    # Options: fallback (zero external setup needed), ollama (local LLM), openai (cloud LLM)
+    provider: ${AI_PROVIDER:fallback}
+  rabbitmq:
+    exchange: gamemesh.telemetry.exchange
+    queue: gamemesh.telemetry.queue
+    routing-key: telemetry.event.#
+    dlx: gamemesh.telemetry.dlx
+    dlq: gamemesh.telemetry.dlq
+
+# -------------------------------------------------------------
+# Actuator & Observability
+# -------------------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+

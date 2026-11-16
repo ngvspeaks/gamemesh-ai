@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameMesh AI | Esports & Gaming Social Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0B0E14;
+            --bg-card: #151922;
+            --bg-card-hover: #1c222e;
+            --bg-sidebar: #10141d;
+            --border: #242b3a;
+            --border-highlight: #3b455b;
+            --text-primary: #f0f3f8;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Top Navbar */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(16, 20, 29, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            -webkit-text-fill-color: white;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .demo-btn {
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            border: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 7px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .demo-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+
+        .record-btn {
+            background: rgba(236, 72, 153, 0.15);
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            color: var(--accent-pink);
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 7px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .record-btn:hover {
+            background: rgba(236, 72, 153, 0.3);
+            transform: scale(1.05);
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        /* App Grid Layout */
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr 340px;
+            gap: 24px;
+            padding: 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        aside {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            transition: border-color 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-highlight);
+        }
+
+        /* Profile Card */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            border: 2px solid var(--accent-cyan);
+            background: #1e293b;
+        }
+
+        .profile-names h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .profile-names p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .badge-rank {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(139, 92, 246, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            margin-top: 4px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            text-align: center;
+            padding: 12px 0 0 0;
+            border-top: 1px solid var(--border);
+            margin-top: 12px;
+        }
+
+        .stat-val {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .stat-lbl {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Navigation List */
+        .filter-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            border-left: 3px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* Feed Center Column */
+        main {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Social Post Composer */
+        .composer-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .composer-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .composer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #1e293b;
+        }
+
+        .composer-headline-input {
+            width: 100%;
+            background: var(--bg-base);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: inherit;
+            margin-bottom: 10px;
+        }
+
+        .composer-headline-input:focus, .composer-textarea:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+
+        .composer-textarea {
+            width: 100%;
+            background: var(--bg-base);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            min-height: 80px;
+            resize: vertical;
+            margin-bottom: 12px;
+        }
+
+        .composer-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .composer-meta-selects {
+            display: flex;
+            gap: 8px;
+        }
+
+        .composer-select {
+            background: var(--bg-base);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .post-submit-btn {
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            border: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .post-submit-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+
+        /* Feed Card */
+        .feed-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            transition: transform 0.15s ease, border-color 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            animation: cardFadeIn 0.35s ease;
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feed-card:hover {
+            border-color: var(--border-highlight);
+            transform: translateY(-2px);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .author-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #334155;
+        }
+
+        .author-info h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .author-badge {
+            font-size: 0.65rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--accent-cyan);
+            font-weight: 800;
+        }
+
+        .author-info span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .badges-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .badge-critical {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+        }
+
+        .badge-high {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-orange);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-low {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-category {
+            background: #1e293b;
+            color: #94a3b8;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .card-headline {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #f8fafc;
+            letter-spacing: -0.01em;
+        }
+
+        .card-summary {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+
+        .impact-bar-wrap {
+            margin: 10px 0;
+            background: #1e293b;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .impact-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+            border-radius: 3px;
+        }
+
+        .recommended-action-box {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(139, 92, 246, 0.08);
+            border-left: 3px solid var(--accent-purple);
+            color: #c4b5fd;
+            margin-bottom: 14px;
+        }
+
+        /* Card Social Actions Bar */
+        .card-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-group-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .action-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .action-btn.liked {
+            color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .action-btn.disliked {
+            color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Comments Drawer */
+        .comments-section {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .comment-input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .comment-input {
+            flex: 1;
+            background: var(--bg-base);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .comment-submit-btn {
+            background: var(--accent-cyan);
+            border: none;
+            color: #0b0e14;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .comment-item {
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-right: 6px;
+        }
+
+        /* Simulator & Hashtags */
+        .sim-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: left;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .sim-btn:hover {
+            transform: translateX(4px);
+            border-color: var(--accent-cyan);
+        }
+
+        .sim-btn.clutch:hover { border-color: var(--accent-green); }
+        .sim-btn.crash:hover { border-color: var(--accent-red); }
+        .sim-btn.toxic:hover { border-color: var(--accent-orange); }
+
+        .hashtag-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+        }
+
+        .hashtag-tag {
+            font-weight: 700;
+            color: var(--accent-cyan);
+            cursor: pointer;
+        }
+
+        .hashtag-count {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .leaderboard-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .leaderboard-gamer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .reputation-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        /* Toast Alert */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--accent-cyan);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 100;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Virtual Demo Cursor */
+        #virtual-cursor {
+            position: fixed;
+            z-index: 99999;
+            pointer-events: none;
+            width: 28px;
+            height: 28px;
+            transition: all 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+            display: none;
+            filter: drop-shadow(0 4px 10px rgba(6, 182, 212, 0.7));
+        }
+
+        /* Cinematic Demo Narration HUD */
+        #demo-hud {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99998;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1.5px solid var(--accent-cyan);
+            border-radius: 16px;
+            padding: 14px 28px;
+            box-shadow: 0 10px 40px rgba(6, 182, 212, 0.35);
+            backdrop-filter: blur(12px);
+            text-align: center;
+            display: none;
+            max-width: 650px;
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translate(-50%, -20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        #demo-hud .hud-badge {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+
+        #demo-hud .hud-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        #demo-hud .hud-sub {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header>
+        <div class="logo-wrap">
+            <div class="logo-icon">🎮</div>
+            <span>GameMesh AI</span>
+        </div>
+
+        <div class="nav-actions">
+            <button class="demo-btn" onclick="startInteractiveDemo()">
+                <span>▶️ Auto-Play Live Demo</span>
+            </button>
+            <button class="record-btn" onclick="recordAndExportDemo()">
+                <span>🎬 Export Demo Video (.webm)</span>
+            </button>
+            <div class="status-pill">
+                <div class="status-dot"></div>
+                <span>RabbitMQ & Spring AI Active</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- App Container -->
+    <div class="app-container">
+
+        <!-- Left Sidebar: Profile & Nav -->
+        <aside>
+            <div class="card" id="profile-card">
+                <div class="profile-header">
+                    <img id="my-avatar" class="avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=vortex_99" alt="Avatar">
+                    <div class="profile-names">
+                        <h3 id="my-name">Vortex Prime</h3>
+                        <p id="my-tag">@vortex_99</p>
+                        <span id="my-rank" class="badge-rank">Apex Predator #14</span>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div>
+                        <div id="stat-rep" class="stat-val">100</div>
+                        <div class="stat-lbl">Reputation</div>
+                    </div>
+                    <div>
+                        <div id="stat-followers" class="stat-val">1.4K</div>
+                        <div class="stat-lbl">Followers</div>
+                    </div>
+                    <div>
+                        <div id="stat-following" class="stat-val">85</div>
+                        <div class="stat-lbl">Following</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="filters-card">
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 10px;">
+                    Community Feed
+                </div>
+                <button class="filter-btn active" id="btn-filter-all" onclick="setFilter(null)">
+                    <span>🔥 Live Arena Feed</span>
+                </button>
+                <button class="filter-btn" id="btn-filter-crashes" onclick="setFilter('CRITICAL')">
+                    <span>🚨 Engine Crashes</span>
+                </button>
+                <button class="filter-btn" id="btn-filter-spikes" onclick="setFilter('HIGH')">
+                    <span>⚠️ Performance / Spikes</span>
+                </button>
+                <button class="filter-btn" id="btn-filter-clutches" onclick="setFilter('LOW')">
+                    <span>🏆 Clutches & Highlights</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Middle Column: Main Social Feed -->
+        <main>
+            <!-- Social Media Post Composer -->
+            <div class="composer-card">
+                <div class="composer-header">
+                    <img class="composer-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=vortex_99" alt="User">
+                    <input type="text" id="composer-headline" class="composer-headline-input" placeholder="What's happening in your matches, @vortex_99?">
+                </div>
+                <textarea id="composer-content" class="composer-textarea" placeholder="Share your clutch moments, rank promotion, or discussion on the latest game meta..."></textarea>
+                <div class="composer-footer">
+                    <div class="composer-meta-selects">
+                        <select id="composer-game" class="composer-select">
+                            <option value="Apex Legends • Ranked">Apex Legends</option>
+                            <option value="Valorant • Competitive">Valorant</option>
+                            <option value="CS2 • Premier">Counter-Strike 2</option>
+                            <option value="League of Legends">League of Legends</option>
+                            <option value="Overwatch 2">Overwatch 2</option>
+                        </select>
+                        <select id="composer-category" class="composer-select">
+                            <option value="COMBAT">Combat Highlight</option>
+                            <option value="CHAT">Tactical Discussion</option>
+                            <option value="ECONOMY">Item & Meta Trade</option>
+                            <option value="SYSTEM">System & Netcode</option>
+                        </select>
+                    </div>
+                    <button class="post-submit-btn" onclick="publishSocialPost()">
+                        <span>⚡ Post to Arena</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Feed Stream -->
+            <div id="feed-stream">
+                <!-- Dynamically loaded cards -->
+            </div>
+        </main>
+
+        <!-- Right Sidebar: Simulator & Trending -->
+        <aside>
+            <div class="card" id="simulator-card">
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 12px;">
+                    ⚡ Match Telemetry Simulator
+                </div>
+                <button class="sim-btn clutch" id="btn-sim-clutch" onclick="simulateClutch()">
+                    <span>🏆</span>
+                    <div>
+                        <div>Simulate 1v3 Clutch</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Dispatches combat highlight</div>
+                    </div>
+                </button>
+                <button class="sim-btn crash" id="btn-sim-crash" onclick="simulateCrash()">
+                    <span>🚨</span>
+                    <div>
+                        <div>Simulate Physics Crash</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Triggers CRITICAL digest</div>
+                    </div>
+                </button>
+                <button class="sim-btn toxic" id="btn-sim-toxic" onclick="simulateToxicity()">
+                    <span>⚠️</span>
+                    <div>
+                        <div>Simulate Toxic Chat</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Tests AI toxicity shield</div>
+                    </div>
+                </button>
+                <button class="sim-btn" id="btn-sim-burst" onclick="simulateBurst()">
+                    <span>🚀</span>
+                    <div>
+                        <div>Simulate 25-Event Burst</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">High-frequency AMQP load</div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="card">
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 12px;">
+                    🔥 Trending Esports Topics
+                </div>
+                <div class="hashtag-row">
+                    <span class="hashtag-tag">#ApexRankedClutch</span>
+                    <span class="hashtag-count">14.2K posts</span>
+                </div>
+                <div class="hashtag-row">
+                    <span class="hashtag-tag">#ValorantPatch10</span>
+                    <span class="hashtag-count">8.5K posts</span>
+                </div>
+                <div class="hashtag-row">
+                    <span class="hashtag-tag">#KraberGod</span>
+                    <span class="hashtag-count">5.1K posts</span>
+                </div>
+                <div class="hashtag-row">
+                    <span class="hashtag-tag">#SubTickLatency</span>
+                    <span class="hashtag-count">3.4K posts</span>
+                </div>
+                <div class="hashtag-row">
+                    <span class="hashtag-tag">#CleanGamingShield</span>
+                    <span class="hashtag-count">2.8K posts</span>
+                </div>
+            </div>
+
+            <div class="card" id="leaderboard-card">
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 12px;">
+                    👑 Top Esports Gamers
+                </div>
+                <div id="leaderboard-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Virtual Animated Cursor for Demo -->
+    <div id="virtual-cursor">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 3L10.5 21L13.5 13.5L21 10.5L3 3Z" fill="#06b6d4" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <!-- Cinematic Demo Narration HUD -->
+    <div id="demo-hud">
+        <div class="hud-badge" id="hud-badge">DEMO STAGE 1/5</div>
+        <div class="hud-text" id="hud-title">Initializing GameMesh AI Platform Demo</div>
+        <div class="hud-sub" id="hud-desc">Automating telemetry ingestion, Spring AI curation, and social interactions</div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        let currentFilter = null;
+        const currentGamer = 'vortex_99';
+
+        // Synthesize UI audio with Web Audio API
+        const audioCtx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
+        function playSfx(type) {
+            if (!audioCtx) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.frequency.setValueAtTime(800, now);
+                    osc.frequency.exponentialRampToValueAtTime(350, now + 0.08);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'highlight') {
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.08);
+                    osc.frequency.setValueAtTime(783.99, now + 0.16);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'alert') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(280, now);
+                    osc.frequency.setValueAtTime(220, now + 0.1);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                }
+            } catch (e) {}
+        }
+
+        async function fetchJson(url, options = {}) {
+            try {
+                const res = await fetch(url, options);
+                return await res.json();
+            } catch (err) {
+                console.error("Fetch error:", err);
+                return null;
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        function timeAgo(dateString) {
+            const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+            if (seconds < 60) return "Just now";
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes}m ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h ago`;
+            const days = Math.floor(hours / 24);
+            return `${days}d ago`;
+        }
+
+        async function loadProfile() {
+            const profile = await fetchJson(`/api/v1/profiles/${currentGamer}`);
+            if (profile) {
+                document.getElementById('my-name').textContent = profile.displayName;
+                document.getElementById('my-tag').textContent = '@' + profile.gamerTag;
+                document.getElementById('my-rank').textContent = profile.rankTier;
+                document.getElementById('stat-rep').textContent = profile.reputationScore;
+                document.getElementById('stat-followers').textContent = profile.followersCount;
+                document.getElementById('stat-following').textContent = profile.followingCount;
+                document.getElementById('my-avatar').src = profile.avatarUrl;
+            }
+        }
+
+        async function loadLeaderboard() {
+            const leaderboard = await fetchJson('/api/v1/profiles/leaderboard?limit=5');
+            const container = document.getElementById('leaderboard-list');
+            if (leaderboard && leaderboard.length > 0) {
+                container.innerHTML = leaderboard.map(p => `
+                    <div class="leaderboard-row">
+                        <div class="leaderboard-gamer">
+                            <img src="${p.avatarUrl}" style="width: 26px; height: 26px; border-radius: 6px;">
+                            <span>${p.displayName}</span>
+                        </div>
+                        <span class="reputation-tag">⭐ ${p.reputationScore}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function loadFeed() {
+            let url = '/api/v1/feed?limit=30';
+            if (currentFilter) {
+                url += `&severity=${currentFilter}`;
+            }
+            const items = await fetchJson(url);
+            const container = document.getElementById('feed-stream');
+
+            if (!items || items.length === 0) {
+                container.innerHTML = `
+                    <div class="card" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                        No telemetry feed items found. Use the buttons on the right or post above!
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = items.map(item => {
+                let badgeClass = 'badge-low';
+                if (item.severity === 'CRITICAL') badgeClass = 'badge-critical';
+                else if (item.severity === 'HIGH') badgeClass = 'badge-high';
+
+                const impactHtml = item.performanceImpactScore > 0 ? `
+                    <div class="impact-bar-wrap" title="Performance Impact: ${(item.performanceImpactScore * 100).toFixed(0)}%">
+                        <div class="impact-bar" style="width: ${Math.min(100, item.performanceImpactScore * 100)}%;"></div>
+                    </div>
+                ` : '';
+
+                const actionHtml = item.recommendedAction ? `
+                    <div class="recommended-action-box">
+                        🛡️ <strong>AI Recommendation:</strong> ${item.recommendedAction}
+                    </div>
+                ` : '';
+
+                return `
+                    <div class="feed-card" id="card-${item.feedId}">
+                        <div class="card-top">
+                            <div class="author-box">
+                                <img class="author-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${item.authorGamerTag}" alt="Avatar">
+                                <div class="author-info">
+                                    <h4>
+                                        ${item.authorGamerTag}
+                                        <span class="author-badge">PRO</span>
+                                    </h4>
+                                    <span>${item.gameId} • ${timeAgo(item.createdAt)}</span>
+                                </div>
+                            </div>
+                            <div class="badges-box">
+                                <span class="badge badge-category">${item.category}</span>
+                                <span class="badge ${badgeClass}">${item.severity}</span>
+                            </div>
+                        </div>
+
+                        <div class="card-headline">${item.headline}</div>
+                        <div class="card-summary">${item.summary}</div>
+
+                        ${impactHtml}
+                        ${actionHtml}
+
+                        <div class="card-actions">
+                            <div class="action-group-left">
+                                <button class="action-btn" id="like-btn-${item.feedId}" onclick="toggleLike('${item.feedId}', this)">
+                                    <span>👍</span>
+                                    <span class="like-count">${item.likeCount}</span>
+                                </button>
+                                <button class="action-btn" id="dislike-btn-${item.feedId}" onclick="toggleDislike('${item.feedId}', this)">
+                                    <span>👎</span>
+                                    <span class="dislike-count">${item.dislikeCount || 0}</span>
+                                </button>
+                                <button class="action-btn" id="comm-btn-${item.feedId}" onclick="toggleComments('${item.feedId}')">
+                                    <span>💬</span>
+                                    <span class="comment-count">${item.commentCount}</span> Comments
+                                </button>
+                            </div>
+                            <div>
+                                <button class="action-btn" onclick="sharePost('${item.feedId}')" title="Share Post">
+                                    <span>🔗</span> Share
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="comments-section" id="comments-${item.feedId}">
+                            <div class="comment-input-row">
+                                <input type="text" class="comment-input" id="input-${item.feedId}" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') submitComment('${item.feedId}')">
+                                <button class="comment-submit-btn" id="btn-post-${item.feedId}" onclick="submitComment('${item.feedId}')">Post</button>
+                            </div>
+                            <div class="comments-list" id="list-${item.feedId}">
+                                <!-- Comments dynamic -->
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function toggleLike(feedId, btn) {
+            playSfx('click');
+            const res = await fetchJson(`/api/v1/feed/${feedId}/like?gamerTag=${currentGamer}`, { method: 'POST' });
+            if (res) {
+                btn.querySelector('.like-count').textContent = res.totalLikes;
+                btn.classList.toggle('liked', res.liked);
+
+                // Update sibling dislike button
+                const card = document.getElementById(`card-${feedId}`);
+                const dislikeBtn = card.querySelector(`#dislike-btn-${feedId}`);
+                if (dislikeBtn) {
+                    dislikeBtn.querySelector('.dislike-count').textContent = res.totalDislikes;
+                    dislikeBtn.classList.remove('disliked');
+                }
+            }
+        }
+
+        async function toggleDislike(feedId, btn) {
+            playSfx('click');
+            const res = await fetchJson(`/api/v1/feed/${feedId}/dislike?gamerTag=${currentGamer}`, { method: 'POST' });
+            if (res) {
+                btn.querySelector('.dislike-count').textContent = res.totalDislikes;
+                btn.classList.toggle('disliked', res.disliked);
+
+                // Update sibling like button
+                const card = document.getElementById(`card-${feedId}`);
+                const likeBtn = card.querySelector(`#like-btn-${feedId}`);
+                if (likeBtn) {
+                    likeBtn.querySelector('.like-count').textContent = res.totalLikes;
+                    likeBtn.classList.remove('liked');
+                }
+            }
+        }
+
+        function sharePost(feedId) {
+            playSfx('highlight');
+            const url = window.location.origin + '/#card-' + feedId;
+            navigator.clipboard.writeText(url);
+            showToast("🔗 Post link copied to clipboard!");
+        }
+
+        async function publishSocialPost() {
+            const headline = document.getElementById('composer-headline').value.trim();
+            const content = document.getElementById('composer-content').value.trim();
+            const gameId = document.getElementById('composer-game').value;
+            const category = document.getElementById('composer-category').value;
+
+            if (!headline || !content) {
+                showToast("⚠️ Please enter a headline and post content!");
+                return;
+            }
+
+            playSfx('highlight');
+            showToast("⚡ Publishing social post to Arena feed...");
+
+            const res = await fetchJson('/api/v1/feed/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    gamerTag: currentGamer,
+                    gameId: gameId,
+                    category: category,
+                    headline: headline,
+                    content: content
+                })
+            });
+
+            if (res) {
+                document.getElementById('composer-headline').value = '';
+                document.getElementById('composer-content').value = '';
+                showToast("🎉 Post successfully published to Arena!");
+                loadFeed();
+            }
+        }
+
+        async function toggleComments(feedId) {
+            playSfx('click');
+            const section = document.getElementById(`comments-${feedId}`);
+            if (section.style.display === 'block') {
+                section.style.display = 'none';
+            } else {
+                section.style.display = 'block';
+                await loadComments(feedId);
+            }
+        }
+
+        async function loadComments(feedId) {
+            const comments = await fetchJson(`/api/v1/feed/${feedId}/comments`);
+            const list = document.getElementById(`list-${feedId}`);
+            if (comments && comments.length > 0) {
+                list.innerHTML = comments.map(c => `
+                    <div class="comment-item">
+                        <span class="comment-author">@${c.gamerTag}:</span>${c.commentText}
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = `<div style="font-size: 0.75rem; color: var(--text-muted); padding: 4px;">No comments yet. Be the first to reply!</div>`;
+            }
+        }
+
+        async function submitComment(feedId) {
+            playSfx('click');
+            const input = document.getElementById(`input-${feedId}`);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const res = await fetchJson(`/api/v1/feed/${feedId}/comments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gamerTag: currentGamer, commentText: text })
+            });
+
+            if (res) {
+                input.value = '';
+                await loadComments(feedId);
+                const card = document.getElementById(`card-${feedId}`);
+                const countSpan = card.querySelector('.comment-count');
+                countSpan.textContent = parseInt(countSpan.textContent || '0') + 1;
+            }
+        }
+
+        function setFilter(severity) {
+            playSfx('click');
+            currentFilter = severity;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            loadFeed();
+        }
+
+        // Simulator Quick Triggers
+        async function simulateClutch() {
+            playSfx('highlight');
+            showToast("🎮 Enqueueing clutch match highlight into RabbitMQ...");
+            await fetchJson('/api/v1/telemetry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    gameId: 'Apex Legends • Ranked',
+                    playerId: currentGamer,
+                    category: 'COMBAT',
+                    eventType: 'CLUTCH_ELIMINATION',
+                    payload: 'gg wp! Clutch 1v3 elimination with Kraber sniper in the final circle!'
+                })
+            });
+            setTimeout(loadFeed, 1000);
+        }
+
+        async function simulateCrash() {
+            playSfx('alert');
+            showToast("🚨 Dispatching critical engine exception into queue...");
+            await fetchJson('/api/v1/telemetry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    gameId: 'CS2 • EU Server Node #12',
+                    playerId: 'system-monitor',
+                    category: 'SYSTEM',
+                    eventType: 'ENGINE_CRASH',
+                    payload: 'FATAL NullPointerException in physics engine tick: null reference on rigid body mesh'
+                })
+            });
+            setTimeout(loadFeed, 1000);
+        }
+
+        async function simulateToxicity() {
+            playSfx('alert');
+            showToast("⚠️ Intercepting toxic chat into moderation pipeline...");
+            await fetchJson('/api/v1/telemetry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    gameId: 'League of Legends • Ranked',
+                    playerId: 'toxic_demon',
+                    category: 'CHAT',
+                    eventType: 'CHAT_MESSAGE',
+                    payload: 'you are complete trash feeder uninstall the game now idiot'
+                })
+            });
+            setTimeout(loadFeed, 1000);
+        }
+
+        async function simulateBurst() {
+            playSfx('highlight');
+            showToast("🚀 Dispatching 25 high-frequency events burst...");
+            await fetchJson('/api/v1/telemetry/mock/simulate?count=25', { method: 'POST' });
+            setTimeout(loadFeed, 1200);
+        }
+
+        // -------------------------------------------------------------
+        // AUTOMATED LIVE DEMO WALKTHROUGH & SCREEN RECORDING SYSTEM
+        // -------------------------------------------------------------
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        function moveCursorTo(element) {
+            const cursor = document.getElementById('virtual-cursor');
+            const rect = element.getBoundingClientRect();
+            cursor.style.display = 'block';
+            cursor.style.left = (rect.left + rect.width / 2) + 'px';
+            cursor.style.top = (rect.top + rect.height / 2) + 'px';
+        }
+
+        function setHud(badge, title, desc) {
+            const hud = document.getElementById('demo-hud');
+            document.getElementById('hud-badge').textContent = badge;
+            document.getElementById('hud-title').textContent = title;
+            document.getElementById('hud-desc').textContent = desc;
+            hud.style.display = 'block';
+        }
+
+        async function startInteractiveDemo(isRecording = false) {
+            const cursor = document.getElementById('virtual-cursor');
+            const hud = document.getElementById('demo-hud');
+
+            try {
+                // Intro
+                setHud("🎬 PRODUCT DEMO", "GameMesh AI — Autonomous Gaming Social Network", "Architecture: Java 23 • Spring Boot 3.4 • RabbitMQ • Spring AI • PostgreSQL");
+                await sleep(2200);
+
+                // Stage 1: Post Composer
+                setHud("STAGE 1 / 4", "User-Generated Posts & Social Interaction", "Gamers post highlights, discussions, and react with likes, dislikes, and comments");
+                const headlineInput = document.getElementById('composer-headline');
+                moveCursorTo(headlineInput);
+                await sleep(700);
+                headlineInput.value = "🔥 Just hit Diamond I solo queue! Let's go!";
+                const contentInput = document.getElementById('composer-content');
+                contentInput.value = "Maining Wraith and Horizon this season. Shoutout to my random teammates for solid coms!";
+                await sleep(800);
+                const postBtn = document.querySelector('.post-submit-btn');
+                moveCursorTo(postBtn);
+                await sleep(600);
+                postBtn.click();
+                await sleep(1500);
+
+                // Stage 2: Likes & Dislikes
+                setHud("STAGE 2 / 4", "Real-Time Engagement (Likes & Dislikes)", "Gamers upvote clutches, express opinions, and start discussion threads");
+                const firstCard = document.querySelector('.feed-card');
+                if (firstCard) {
+                    const likeBtn = firstCard.querySelector('.action-btn');
+                    moveCursorTo(likeBtn);
+                    await sleep(800);
+                    likeBtn.click();
+                    await sleep(1000);
+
+                    const commBtn = firstCard.querySelectorAll('.action-btn')[2];
+                    moveCursorTo(commBtn);
+                    await sleep(700);
+                    commBtn.click();
+                    await sleep(700);
+
+                    const input = firstCard.querySelector('.comment-input');
+                    input.focus();
+                    input.value = "Insane Kraber snipe clutch!";
+                    await sleep(600);
+                    const submitBtn = firstCard.querySelector('.comment-submit-btn');
+                    moveCursorTo(submitBtn);
+                    await sleep(500);
+                    submitBtn.click();
+                    await sleep(1200);
+                }
+
+                // Stage 3: Toxicity Shield
+                setHud("STAGE 3 / 4", "Automated Community Safety & Toxicity Shield", "Real-time AI NLP catches griefing chat and protects the social community");
+                const toxicBtn = document.getElementById('btn-sim-toxic');
+                moveCursorTo(toxicBtn);
+                await sleep(800);
+                toxicBtn.click();
+                await sleep(1600);
+
+                // Stage 4: Reliability Watchdog
+                setHud("STAGE 4 / 4", "Platform Reliability Watchdog & Crash Alerting", "Engine errors trigger CRITICAL severity cards with performance impact and engineering recommendations");
+                const crashBtn = document.getElementById('btn-sim-crash');
+                moveCursorTo(crashBtn);
+                await sleep(800);
+                crashBtn.click();
+                await sleep(1600);
+
+                // Outro
+                setHud("✅ DEMO COMPLETE", "Production-Ready GameMesh AI Backend", "Ready to deploy: local-first, decoupled, resilient, and intelligent!");
+                playSfx('highlight');
+                await sleep(3000);
+            } finally {
+                cursor.style.display = 'none';
+                hud.style.display = 'none';
+            }
+        }
+
+        async function recordAndExportDemo() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                alert("Screen capture is not supported in this browser. Please use Chrome or Edge, or press Win + Alt + R to record.");
+                return;
+            }
+
+            try {
+                showToast("🎥 Select the GameMesh AI tab in the prompt to begin recording...");
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { displaySurface: "browser" },
+                    audio: true
+                });
+
+                const chunks = [];
+                const recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+                recorder.ondataavailable = e => {
+                    if (e.data.size > 0) chunks.push(e.data);
+                };
+
+                recorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'GameMesh-AI-Social-Media-Demo.webm';
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }, 100);
+                    showToast("🎬 Demo video recorded and downloaded successfully!");
+                };
+
+                recorder.start();
+                await sleep(1000);
+                await startInteractiveDemo(true);
+                recorder.stop();
+                stream.getTracks().forEach(t => t.stop());
+            } catch (err) {
+                console.error("Recording error:", err);
+                showToast("Recording cancelled.");
+            }
+        }
+
+        // Init on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadProfile();
+            loadLeaderboard();
+            loadFeed();
+            setInterval(loadFeed, 6000);
+        });
+    </script>
+</body>
+</html>
